@@ -1,16 +1,19 @@
 import axios from 'axios';
-const BASE_URL = 'http://127.0.0.1:5173/api/';
+
+
+import type { GenericResponse, ILoginResponse, IUserResponse, ILoginInput, ISignUpInput } from './types';
+
+const BASE_URL = 'http://127.0.0.1:5173/';
 
 const authApi = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true, // force credentials to every Axios request
+  withCredentials: true,
 });
 
 authApi.defaults.headers.common['Content-Type'] = 'application/json';
 
-
 export const refreshAccessTokenFn = async () => {
-  const response = await authApi.get<ILoginResponse>('auth/refresh');
+  const response = await authApi.get<ILoginResponse>('/refresh');
   return response.data;
 };
 
@@ -30,13 +33,13 @@ authApi.interceptors.response.use(
   }
 );
 
-export const signUpUserFn = async (user: RegisterInput) => {
-  const response = await authApi.post<GenericResponse>('auth/register', user);
+export const signUpUserFn = async (user: ISignUpInput) => {
+  const response = await authApi.post<GenericResponse>('/register', user);
   return response.data;
 };
 
-export const loginUserFn = async (user: LoginInput) => {
-  const response = await authApi.post<ILoginResponse>('auth/login', user);
+export const loginUserFn = async (user: ILoginInput) => {
+  const response = await authApi.post<ILoginResponse>('/login', user);
   return response.data;
 };
 
@@ -48,7 +51,7 @@ export const verifyEmailFn = async (verificationCode: string) => {
 };
 
 export const logoutUserFn = async () => {
-  const response = await authApi.get<GenericResponse>('auth/logout');
+  const response = await authApi.get<GenericResponse>('/logout');
   return response.data;
 };
 
